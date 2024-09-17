@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../admin_page/admin_page.dart';
 import '../misc/colors.dart';
 import '../widgets/app_largetext.dart';
 import '../widgets/app_text.dart';
@@ -87,16 +88,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               },
             ),
             // Uncomment if needed
-            // ListTile(
-            //   leading: Icon(Icons.admin_panel_settings),
-            //   title: Text('Admin Page'),
-            //   onTap: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => AdminPage()),
-            //     );
-            //   },
-            // ),
+             ListTile(
+               leading: Icon(Icons.admin_panel_settings),
+               title: Text('Admin Page'),
+               onTap: () {
+                 Navigator.push(
+                   context,
+                   MaterialPageRoute(builder: (context) => AdminPage()),
+                 );
+               },
+            ),
             // ListTile(
             //   leading: Icon(Icons.pageview),
             //   title: Text('Page 1'),
@@ -114,7 +115,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 10,
+            height: 5,
           ),
           //discover text
           Container(
@@ -122,7 +123,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: (AppLargeText(text: "Discover")),
           ),
           SizedBox(
-            height: 20,
+            height: 10,
           ),
           //tabbar
           Container(
@@ -173,7 +174,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
           SizedBox(
-            height: 40,
+            height: 25,
           ),
           Container(
             margin: const EdgeInsets.only(left: 20, right: 20),

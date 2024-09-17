@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../misc/colors.dart';
+import '../../widgets/app_largetext.dart';
+
 
 class MyPage extends StatelessWidget {
   const MyPage({super.key});
@@ -7,17 +10,10 @@ class MyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("My Profile"),
+      appBar:  AppBar(
+        backgroundColor: AppColors.mainColor,
+        title: AppLargeText(text: "Profile", color: Colors.white, size: 32),
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {
-              // Navigate to settings page
-            },
-          ),
-        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

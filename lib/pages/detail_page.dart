@@ -20,6 +20,11 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.mainColor,
+        title: AppLargeText(text: "Search", color: Colors.white, size: 32),
+        elevation: 0,
+      ),
       body: Container(
         width: double.maxFinite,
         height: double.maxFinite,

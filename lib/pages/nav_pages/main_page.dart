@@ -6,6 +6,8 @@ import 'booking_page.dart';
 import 'my_page.dart';
 
 
+import 'package:beyond/pages/nav_pages/upload_page.dart';  // Import the new page
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -14,22 +16,22 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  List pages= [
+  List pages = [
     HomePage(),
     BookingPage(),
     SearchPage(),
     MyPage(),
-
+    UploadPage(), // Add the new page here
   ];
-  int currentIndex=0;
+  int currentIndex = 0;
 
   void onTap(int index) {
-    setState(() {  // Call setState to rebuild the widget with the new index
+    setState(() {
       currentIndex = index;
     });
   }
-  @override
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -38,21 +40,23 @@ class _MainPageState extends State<MainPage> {
         unselectedFontSize: 0,
         selectedFontSize: 0,
         type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
-          onTap: onTap,
-          currentIndex: currentIndex,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.grey,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          elevation: 0,
-          items: [
-            BottomNavigationBarItem(label:("Home"),icon: Icon(Icons.apps)),
-            BottomNavigationBarItem(label:("Bar"),icon: Icon(Icons.bar_chart_sharp)),
-            BottomNavigationBarItem(label:("Search"),icon: Icon(Icons.search)),
-            BottomNavigationBarItem(label:("Me"),icon: Icon(Icons.person)),
-          ]
+        backgroundColor: Colors.white,
+        onTap: onTap,
+        currentIndex: currentIndex,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 0,
+        items: [
+          BottomNavigationBarItem(label: "Home", icon: Icon(Icons.apps)),
+          BottomNavigationBarItem(label: "Booking", icon: Icon(Icons.bar_chart_sharp)),
+          BottomNavigationBarItem(label: "Search", icon: Icon(Icons.search)),
+          BottomNavigationBarItem(label: "Me", icon: Icon(Icons.person)),
+          BottomNavigationBarItem(label: "Upload", icon: Icon(Icons.upload)), // New item
+        ],
       ),
     );
   }
 }
+

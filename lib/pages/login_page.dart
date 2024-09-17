@@ -18,18 +18,11 @@ class LoginPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
-            SizedBox(
-              width: 75,
-            ),
-            Center(
-              child: AppLargeText(
-                text: "BEYOND",
-                color: AppColors.mainColor.withOpacity(0.8),
-              ),
-            ),
-          ],
+        title: Center(
+          child: AppLargeText(
+            text: "BEYOND",
+            color: AppColors.mainColor.withOpacity(0.8),
+          ),
         ),
         backgroundColor: Colors.cyan.withOpacity(0.1),
         elevation: 0,

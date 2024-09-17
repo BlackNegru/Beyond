@@ -30,13 +30,14 @@ class _BookingPageState extends State<BookingPage> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //backgroundColor: Colors.deepPurple.withOpacity(0.7),
-        title: AppLargeText(text: "My Bookings", color: AppColors.bigTextColor,size: 32,),
+        backgroundColor: AppColors.mainColor,
+        title: AppLargeText(text: "Search", color: Colors.white, size: 32),
         elevation: 0,
         bottom: TabBar(
+
           controller: _tabController,
-          labelColor: AppColors.mainColor,
-          unselectedLabelColor: AppColors.mainColor,
+          labelColor: AppColors.textColor2,
+          unselectedLabelColor: Colors.white,
           indicatorColor: Colors.black,
           tabs: [
             Tab(text: "Upcoming"),
