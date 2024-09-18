@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../misc/colors.dart';
-import '../../widgets/app_largetext.dart'; // Ensure this path is correct
-import '../../widgets/app_text.dart'; // Ensure this path is correct
+import '../../widgets/app_largetext.dart';
+import '../../widgets/app_text.dart';
 
 class UploadPage extends StatefulWidget {
   const UploadPage({super.key});
@@ -16,7 +16,18 @@ class UploadPage extends StatefulWidget {
 class _UploadPageState extends State<UploadPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _detailsController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
   XFile? _selectedImage;
+  String _selectedExperienceType = 'Hiking';
+
+  final List<String> _experienceTypes = [
+    'Hiking',
+    'Snorkeling',
+    'Snowboarding',
+    'Diving',
+    'Ballooning',
+    // Add more options as needed
+  ];
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -32,7 +43,7 @@ class _UploadPageState extends State<UploadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  AppBar(
+      appBar: AppBar(
         backgroundColor: AppColors.mainColor,
         title: AppLargeText(text: "Upload Experience", color: Colors.white, size: 32),
         elevation: 0,
@@ -45,7 +56,7 @@ class _UploadPageState extends State<UploadPage> {
             GestureDetector(
               onTap: _pickImage,
               child: Container(
-                height: 200,
+                height: 150,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.3),
@@ -68,7 +79,7 @@ class _UploadPageState extends State<UploadPage> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 15),
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
@@ -76,7 +87,35 @@ class _UploadPageState extends State<UploadPage> {
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 15),
+            TextField(
+              controller: _priceController,
+              decoration: InputDecoration(
+                labelText: 'Price',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 15),
+            DropdownButtonFormField<String>(
+              value: _selectedExperienceType,
+              decoration: InputDecoration(
+                labelText: 'Select Experience Type',
+                border: OutlineInputBorder(),
+              ),
+              items: _experienceTypes.map((String type) {
+                return DropdownMenuItem<String>(
+                  value: type,
+                  child: Text(type),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedExperienceType = newValue!;
+                });
+              },
+            ),
+            SizedBox(height: 15),
             TextField(
               controller: _detailsController,
               maxLines: 5,
@@ -85,7 +124,7 @@ class _UploadPageState extends State<UploadPage> {
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 15),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.mainColor,
@@ -98,8 +137,13 @@ class _UploadPageState extends State<UploadPage> {
                 // Handle form submission logic here
                 String name = _nameController.text;
                 String details = _detailsController.text;
+                String price = _priceController.text;
+                String experienceType = _selectedExperienceType;
+
                 // Handle the image upload and experience details saving here
                 print('Name: $name');
+                print('Price: $price');
+                print('Experience Type: $experienceType');
                 print('Details: $details');
                 if (_selectedImage != null) {
                   print('Selected Image Path: ${_selectedImage!.path}');
