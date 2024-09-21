@@ -1,15 +1,45 @@
 import 'package:beyond/pages/signup_page.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-import '../admin_page/admin_page.dart';
 import '../misc/colors.dart';
 import '../widgets/app_largetext.dart';
 import '../widgets/app_text.dart';
-import 'detail_page.dart';
 import 'nav_pages/main_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
+
+  Future<void> loginUser(BuildContext context, String email, String password) async {
+    final url = 'http://192.168.134.120:5000/login'; // Replace with your backend server URL
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        final token = jsonResponse['token'];
+
+        // Navigate to MainPage on successful login
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage()),
+        );
+      } else {
+        // Handle invalid credentials
+        print('Login failed: ${response.body}');
+      }
+    } catch (error) {
+      print('Error during login: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +98,10 @@ class LoginPage extends StatelessWidget {
                   TextField(
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: Icon(Icons.email, color: Colors.white),
                       labelText: "Email Address",
-                      labelStyle: TextStyle(color: Colors.white,),
+                      labelStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
@@ -86,7 +116,7 @@ class LoginPage extends StatelessWidget {
                   TextField(
                     controller: passwordController,
                     obscureText: true,
-                    decoration:  InputDecoration(
+                    decoration: InputDecoration(
                       prefixIcon: Icon(Icons.lock, color: Colors.white),
                       labelText: "Password",
                       labelStyle: TextStyle(color: Colors.white),
@@ -100,36 +130,10 @@ class LoginPage extends StatelessWidget {
                     ),
                     style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Handle login action and navigate to MainPage
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => DetailPage()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.mainColor.withOpacity(0.4),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 10.0, horizontal: 15.0),
-                      ),
-                      child: Text(
-                        "Forgot PassWord",
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                      ),
-                    ),
-                  ),
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Handle login action and navigate to MainPage
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainPage()),
-                      );
+                      loginUser(context, emailController.text, passwordController.text);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.mainColor.withOpacity(0.4),
@@ -144,7 +148,6 @@ class LoginPage extends StatelessWidget {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Handle login action and navigate to MainPage
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => SignUpPage()),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import '../misc/colors.dart';
 import '../widgets/app_largetext.dart';
 import '../widgets/app_text.dart';
@@ -7,11 +10,38 @@ import 'nav_pages/main_page.dart';
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
 
+  Future<void> registerUser(BuildContext context, String name, String email, String password) async {
+    final url = 'http://192.168.134.120:5000/register'; // Replace with your backend server URL
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'name': name,
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        // Navigate to MainPage on successful registration
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage()),
+        );
+      } else {
+        // Handle registration failure
+        print('Registration failed: ${response.body}');
+      }
+    } catch (error) {
+      print('Error during registration: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final TextEditingController nameController = TextEditingController();
     final TextEditingController emailController = TextEditingController();
-    final TextEditingController phoneController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
@@ -99,23 +129,6 @@ class SignUpPage extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   TextField(
-                    controller: phoneController,
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.phone, color: Colors.white),
-                      labelText: "Phone Number",
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  TextField(
                     controller: passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -135,11 +148,7 @@ class SignUpPage extends StatelessWidget {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Handle sign-up action and navigate to MainPage
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainPage()),
-                      );
+                      registerUser(context, nameController.text, emailController.text, passwordController.text);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.mainColor.withOpacity(0.4),
