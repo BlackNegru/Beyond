@@ -12,7 +12,7 @@ class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   Future<void> loginUser(BuildContext context, String email, String password) async {
-    final url = 'http://192.168.134.120:5000/login'; // Replace with your backend server URL
+    final url = 'http://192.168.39.120:5000/login'; // Replace with your backend server URL
     try {
       final response = await http.post(
         Uri.parse(url),

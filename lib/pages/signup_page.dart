@@ -11,7 +11,7 @@ class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
 
   Future<void> registerUser(BuildContext context, String name, String email, String password) async {
-    final url = 'http://192.168.134.120:5000/register'; // Replace with your backend server URL
+    final url = 'http://192.168.39.120:5000/register'; // Replace with your backend server URL
     try {
       final response = await http.post(
         Uri.parse(url),
