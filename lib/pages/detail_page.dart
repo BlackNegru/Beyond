@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../misc/colors.dart';
 import '../widgets/app_buttons.dart';
 import '../widgets/app_largetext.dart';
@@ -15,7 +14,34 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   int gottenStars = 3;
-  int selectedIndex=1;
+  int selectedIndex = 1;
+  String bookingStatus = "Not Booked"; // Example status, will come from the backend later
+
+  Color getStatusColor(String status) {
+    switch (status) {
+      case 'Not Booked':
+        return Colors.red.withOpacity(0.7);
+      case 'Pending':
+        return Colors.yellow.withOpacity(0.7);
+      case 'Booked':
+        return Colors.green.withOpacity(0.7);
+      default:
+        return Colors.grey.withOpacity(0.7);
+    }
+  }
+
+  String getStatusText(String status) {
+    switch (status) {
+      case 'Not Booked':
+        return "Not Booked";
+      case 'Pending':
+        return "Pending";
+      case 'Booked':
+        return "Booked";
+      default:
+        return "Unknown";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,169 +57,190 @@ class _DetailPageState extends State<DetailPage> {
         child: Stack(
           children: [
             Positioned(
-                left: 0,
-                right: 0,
-                child: Container(
-                  width: double.maxFinite,
-                  height: 400,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("img/mountain.jpeg"),
-                      fit: BoxFit.cover,
-                    ),
+              left: 0,
+              right: 0,
+              child: Container(
+                width: double.maxFinite,
+                height: 400,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("img/mountain.jpeg"),
+                    fit: BoxFit.cover,
                   ),
-                )),
+                ),
+              ),
+            ),
             Positioned(
-                left: 20,
-                top: 50,
-                child: Row(
+              left: 20,
+              top: 50,
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.menu_rounded),
+                    color: Colors.white,
+                  )
+                ],
+              ),
+            ),
+            Positioned(
+              top: 320,
+              child: Container(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                width: MediaQuery.of(context).size.width,
+                height: 500,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.menu_rounded),
-                        color: Colors.white)
-                  ],
-                )),
-            Positioned(
-                top: 320,
-                child: Container(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                  width: MediaQuery.of(context).size.width,
-                  height: 500,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        topRight: Radius.circular(25),
-                      )),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          AppLargeText(
-                            text: "Yosemite",
-                            color: Colors.black.withOpacity(0.7),
-                          ),
-                          AppLargeText(
-                            text: "\$ 250",
-                            color: AppColors.mainColor,
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.location_on,
-                            color: AppColors.mainColor,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          AppLargeText(
-                            text: "USA California",
-                            color: AppColors.textColor1,
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Wrap(
-                            children: List.generate(5, (index) {
-                              return Icon(Icons.star,
-                                  color: gottenStars > index
-                                      ? AppColors.starColor
-                                      : AppColors.textColor2);
-                            }),
-                          ),
-                          SizedBox(width: 10),
-                          AppText(
-                            text: "4.0",
-                            color: AppColors.textColor2,
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      AppLargeText(
-                        text: "People",
-                        color: Colors.black.withOpacity(0.8),
-                        size: 20,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      AppText(
-                        text: "Number of people in your group",
-                        color: AppColors.mainTextColor,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Wrap(
-                          children: List.generate(5, (index) {
-                            return InkWell(
-                              onTap:(){
-                                setState(() {
-                                  selectedIndex=index;
-                                });
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.only(right:10),
-                                child: AppButtons(
-                                  size: 50,
-                                  color: selectedIndex==index?Colors.white:Colors.black,
-                                  backgroundcolor: selectedIndex==index?Colors.black:AppColors.buttonBackground,
-                                  bordercolor: selectedIndex==index?Colors.black:AppColors.buttonBackground,
-                                  text: (index+1).toString(),
-                                ),
-                              ),
-                            );
-                            },
-                          )
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      AppLargeText(text: "Description",color: Colors.black.withOpacity(0.8),size: 20,),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      AppText(text: "You must go for a travel fkjf fgkas fgf dfhbds fsdkbf sdbh sdfhsdf hsdjfh sdjhvsd fjhsdf sdhfb sdfjh",color: AppColors.mainTextColor,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        AppLargeText(
+                          text: "Yosemite",
+                          color: Colors.black.withOpacity(0.7),
+                        ),
+                        AppLargeText(
+                          text: "\$ 250",
+                          color: AppColors.mainColor,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on, color: AppColors.mainColor),
+                        SizedBox(width: 5),
+                        AppLargeText(
+                          text: "USA California",
+                          color: AppColors.textColor1,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
 
-                    ],
-                  ),
-                )),
+                    // Floating Status Widget aligned to the left and resized
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: getStatusColor(bookingStatus),
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 6.0,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: AppLargeText(
+                        text: getStatusText(bookingStatus),
+                        color: Colors.white,
+                        size: 14, // Reduced size of the status text
+                      ),
+                    ),
+
+                    SizedBox(height: 20),
+
+                    Row(
+                      children: [
+                        Wrap(
+                          children: List.generate(5, (index) {
+                            return Icon(Icons.star,
+                                color: gottenStars > index
+                                    ? AppColors.starColor
+                                    : AppColors.textColor2);
+                          }),
+                        ),
+                        SizedBox(width: 10),
+                        AppText(
+                          text: "4.0",
+                          color: AppColors.textColor2,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 25),
+                    AppLargeText(
+                      text: "People",
+                      color: Colors.black.withOpacity(0.8),
+                      size: 20,
+                    ),
+                    SizedBox(height: 5),
+                    AppText(
+                      text: "Number of people in your group",
+                      color: AppColors.mainTextColor,
+                    ),
+                    SizedBox(height: 10),
+                    Wrap(
+                      children: List.generate(5, (index) {
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedIndex = index;
+                            });
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 10),
+                            child: AppButtons(
+                              size: 50,
+                              color: selectedIndex == index
+                                  ? Colors.white
+                                  : Colors.black,
+                              backgroundcolor: selectedIndex == index
+                                  ? Colors.black
+                                  : AppColors.buttonBackground,
+                              bordercolor: selectedIndex == index
+                                  ? Colors.black
+                                  : AppColors.buttonBackground,
+                              text: (index + 1).toString(),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                    SizedBox(height: 20),
+                    AppLargeText(
+                      text: "Description",
+                      color: Colors.black.withOpacity(0.8),
+                      size: 20,
+                    ),
+                    SizedBox(height: 10),
+                    AppText(
+                      text:
+                      "You must go for a travel fkjf fgkas fgf dfhbds fsdkbf sdbh sdfhsdf hsdjfh sdjhvsd fjhsdf sdhfb sdfjh",
+                      color: AppColors.mainTextColor,
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Positioned(
               bottom: 20,
-                left: 20,
-                right: 20,
-                child: Row(
-                  children: [
-                    AppButtons(
-                      size: 60,
-                      color: AppColors.textColor2,
-                      backgroundcolor: Colors.white,
-                      bordercolor: AppColors.textColor1,
-                      isIcon: true,
-                      icon: Icons.favorite_border,
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    ResponsiveButton(
-                      isResponsive: true,
-                    )
-                  ],
-                ))
+              left: 20,
+              right: 20,
+              child: Row(
+                children: [
+                  AppButtons(
+                    size: 60,
+                    color: AppColors.textColor2,
+                    backgroundcolor: Colors.white,
+                    bordercolor: AppColors.textColor1,
+                    isIcon: true,
+                    icon: Icons.favorite_border,
+                  ),
+                  SizedBox(width: 20),
+                  ResponsiveButton(
+                    isResponsive: true,
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

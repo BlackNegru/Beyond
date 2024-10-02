@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import '../misc/colors.dart';
 import '../widgets/app_largetext.dart';
 import '../widgets/app_text.dart';
-import 'nav_pages/main_page.dart';
+import 'login_page.dart'; // Ensure you have a login page
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
 
   Future<void> registerUser(BuildContext context, String name, String email, String password) async {
-    final url = 'http://192.168.39.120:5000/register'; // Replace with your backend server URL
+    final url = 'http://192.168.0.105:5000/register'; // Replace with your backend server URL
+
+    // Check if the email is valid using regex
+    if (!validateEmail(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Invalid email format!")),
+      );
+      return;
+    }
+
     try {
       final response = await http.post(
         Uri.parse(url),
@@ -24,18 +32,32 @@ class SignUpPage extends StatelessWidget {
       );
 
       if (response.statusCode == 201) {
-        // Navigate to MainPage on successful registration
-        Navigator.push(
+        // Navigate to LoginPage on successful registration
+        Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MainPage()),
+          MaterialPageRoute(builder: (context) => LoginPage()),
         );
       } else {
         // Handle registration failure
         print('Registration failed: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Registration failed. Try again.")),
+        );
       }
     } catch (error) {
       print('Error during registration: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("An error occurred. Please try again.")),
+      );
     }
+  }
+
+  bool validateEmail(String email) {
+    // Regular expression for basic email validation
+    final RegExp emailRegex = RegExp(
+      r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+    );
+    return emailRegex.hasMatch(email);
   }
 
   @override
@@ -148,7 +170,15 @@ class SignUpPage extends StatelessWidget {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      registerUser(context, nameController.text, emailController.text, passwordController.text);
+                      if (nameController.text.isNotEmpty &&
+                          emailController.text.isNotEmpty &&
+                          passwordController.text.isNotEmpty) {
+                        registerUser(context, nameController.text, emailController.text, passwordController.text);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Please fill all fields")),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.mainColor.withOpacity(0.4),
