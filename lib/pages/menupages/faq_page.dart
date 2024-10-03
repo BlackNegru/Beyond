@@ -113,7 +113,7 @@ class _FaqItemState extends State<FaqItem> {
               AppLargeText(
                 text: widget.question,
                 color: Colors.black.withOpacity(0.7),
-                size: 16,
+                size: 12,
               ),
               Icon(
                 _isExpanded ? Icons.expand_less : Icons.expand_more,

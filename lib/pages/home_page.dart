@@ -1,3 +1,4 @@
+import 'package:beyond/pages/Listings_page.dart';
 import 'package:flutter/material.dart';
 
 import '../admin_page/admin_page.dart';
@@ -68,6 +69,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
             ),
             ListTile(
+              leading: Icon(Icons.pageview),
+              title: Text('Listings'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ListingsPage()),
+                );
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
               onTap: () {
@@ -88,26 +99,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               },
             ),
             // Uncomment if needed
-             ListTile(
-               leading: Icon(Icons.admin_panel_settings),
-               title: Text('Admin Page'),
-               onTap: () {
-                 Navigator.push(
-                   context,
-                   MaterialPageRoute(builder: (context) => AdminPage()),
-                 );
-               },
+            ListTile(
+              leading: Icon(Icons.admin_panel_settings),
+              title: Text('Admin Page'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AdminPage()),
+                );
+              },
             ),
-            // ListTile(
-            //   leading: Icon(Icons.pageview),
-            //   title: Text('Page 1'),
-            //   onTap: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => Page1()),
-            //     );
-            //   },
-            // ),
           ],
         ),
       ),
