@@ -68,6 +68,7 @@ class SignUpPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // This line removes the back button
         title: Center(
           child: AppLargeText(
             text: "BEYOND",
@@ -105,16 +106,10 @@ class SignUpPage extends StatelessWidget {
                 children: [
                   AppText(
                     text: "Create an Account",
-                    size: 24,
+                    size: 20,
                     color: Colors.white,
                   ),
-                  SizedBox(height: 10),
-                  AppText(
-                    text: "Fill in your details below",
-                    size: 16,
-                    color: Colors.white.withOpacity(0.7),
-                  ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 5),
                   TextField(
                     controller: nameController,
                     decoration: InputDecoration(
@@ -131,7 +126,7 @@ class SignUpPage extends StatelessWidget {
                     ),
                     style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   TextField(
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -149,7 +144,7 @@ class SignUpPage extends StatelessWidget {
                     ),
                     style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   TextField(
                     controller: passwordController,
                     obscureText: true,
@@ -167,7 +162,7 @@ class SignUpPage extends StatelessWidget {
                     ),
                     style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
                       if (nameController.text.isNotEmpty &&
@@ -187,7 +182,7 @@ class SignUpPage extends StatelessWidget {
                     ),
                     child: Text(
                       "Sign Up",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ),
                 ],

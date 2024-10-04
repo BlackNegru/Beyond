@@ -48,6 +48,7 @@ class LoginPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // This line removes the back button
         title: Center(
           child: AppLargeText(
             text: "BEYOND",
@@ -89,12 +90,6 @@ class LoginPage extends StatelessWidget {
                     color: Colors.white,
                   ),
                   SizedBox(height: 10),
-                  AppText(
-                    text: "Enter your credentials below",
-                    size: 16,
-                    color: Colors.white.withOpacity(0.7),
-                  ),
-                  SizedBox(height: 20),
                   TextField(
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -112,7 +107,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   TextField(
                     controller: passwordController,
                     obscureText: true,
@@ -130,7 +125,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     style: TextStyle(color: Colors.white),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
                       loginUser(context, emailController.text, passwordController.text);
@@ -142,10 +137,10 @@ class LoginPage extends StatelessWidget {
                     ),
                     child: Text(
                       "Login",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 5),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -156,11 +151,11 @@ class LoginPage extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.mainColor.withOpacity(0.4),
                       padding: EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 15.0),
+                          vertical: 1.0, horizontal: 15.0),
                     ),
                     child: Text(
-                      "Don't have an account? Sign up",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      "Don't have an account?Sign up",
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                     ),
                   ),
                 ],
