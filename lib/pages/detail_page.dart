@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For date formatting
+import 'package:url_launcher/url_launcher.dart'; // For launching URLs
 import '../misc/colors.dart';
 import '../widgets/app_buttons.dart';
 import '../widgets/app_largetext.dart';
@@ -99,6 +100,15 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
+  Future<void> _openGoogleMaps() async {
+    const url = 'https://www.google.com/maps/place/Yosemite+National+Park'; // Static link for now
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,13 +167,49 @@ class _DetailPageState extends State<DetailPage> {
                         ],
                       ),
                       SizedBox(height: 10),
+                      // Floating location button
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Icon(Icons.location_on, color: AppColors.mainColor),
-                          SizedBox(width: 5),
-                          AppLargeText(
-                            text: "USA California",
-                            color: AppColors.textColor1,
+                          Row(
+                            children: [
+                              Icon(Icons.location_on, color: AppColors.mainColor),
+                              SizedBox(width: 5),
+                              AppLargeText(
+                                text: "USA California",
+                                color: AppColors.textColor1,
+                              ),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: _openGoogleMaps,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                              margin: const EdgeInsets.only(top: 10),
+                              decoration: BoxDecoration(
+                                color: AppColors.buttonBackground,
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 8.0,
+                                    offset: Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.location_on, color: AppColors.mainColor, size: 15),
+                                  SizedBox(width: 5),
+                                  AppText(
+                                    text: "View on Maps",
+                                    color: Colors.black,
+                                    size: 16, // Increased size for visibility
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -263,55 +309,46 @@ class _DetailPageState extends State<DetailPage> {
                         color: Colors.black.withOpacity(0.8),
                         size: 20,
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 5),
                       GestureDetector(
                         onTap: () => _selectDate(context),
                         child: Container(
-                          padding: EdgeInsets.all(15),
+                          height: 50,
                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
                             color: AppColors.buttonBackground,
-                            borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              AppText(
-                                text: selectedDate == null
-                                    ? "Choose Date"
-                                    : DateFormat.yMMMMd().format(selectedDate!),
-                                color: Colors.black,
-                              ),
-                              Icon(Icons.calendar_today, color: AppColors.mainColor),
-                            ],
+                          child: Center(
+                            child: AppText(
+                              text: selectedDate == null
+                                  ? "Select date"
+                                  : DateFormat.yMMMMd().format(selectedDate!),
+                              color: selectedDate == null
+                                  ? AppColors.textColor2
+                                  : Colors.black,
+                            ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 125),
+                      SizedBox(height: 25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppButtons(
+                            color: AppColors.textColor1,
+                            backgroundcolor: Colors.white,
+                            bordercolor: AppColors.textColor1,
+                            size: 60,
+                            text: "Cancel",
+                          ),
+                          ResponsiveButton(
+                            isResponsive: true,
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ),
-            Positioned(
-              bottom: 20,
-              left: 20,
-              right: 20,
-              child: Row(
-                children: [
-                  AppButtons(
-                    size: 60,
-                    color: AppColors.textColor2,
-                    backgroundcolor: Colors.white,
-                    bordercolor: AppColors.textColor1,
-                    isIcon: true,
-                    icon: Icons.favorite_border,
-                  ),
-                  SizedBox(width: 20),
-                  ResponsiveButton(
-                    isResponsive: true,
-                  ),
-
-                ],
               ),
             ),
           ],

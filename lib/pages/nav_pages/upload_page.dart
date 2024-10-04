@@ -14,13 +14,14 @@ class UploadPage extends StatefulWidget {
 }
 
 class _UploadPageState extends State<UploadPage> {
-  final TextEditingController _emailController = TextEditingController(); // Email controller
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _detailsController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _otherExperienceController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _maxPeopleController = TextEditingController();
+  final TextEditingController _gmapsLinkController = TextEditingController(); // Google Maps link controller
 
   List<XFile?> _selectedImages = List.generate(4, (index) => null);
   String _selectedExperienceType = 'Hiking';
@@ -47,16 +48,17 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   Future<void> _uploadExperience() async {
-    final String url = 'http://192.168.0.105:5000/upload-experience'; // Replace with your actual API endpoint
+    final String url = 'http://192.168.0.105:5000/upload-experience';
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
-    request.fields['email'] = _emailController.text; // Get email from input
+    request.fields['email'] = _emailController.text;
     request.fields['name'] = _nameController.text;
     request.fields['price'] = _priceController.text;
     request.fields['type'] = _selectedExperienceType;
     request.fields['description'] = _detailsController.text;
     request.fields['location'] = _locationController.text;
     request.fields['maxPeople'] = _maxPeopleController.text;
+    request.fields['gmapsLink'] = _gmapsLinkController.text; // Google Maps link field
 
     if (_isOtherSelected) {
       request.fields['otherExperience'] = _otherExperienceController.text;
@@ -103,7 +105,6 @@ class _UploadPageState extends State<UploadPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Email Field for User Input
             TextField(
               controller: _emailController,
               decoration: InputDecoration(
@@ -172,7 +173,6 @@ class _UploadPageState extends State<UploadPage> {
               ),
             ),
 
-            // Experience Type Dropdown
             DropdownButtonFormField<String>(
               value: _selectedExperienceType,
               onChanged: (String? newValue) {
@@ -206,7 +206,6 @@ class _UploadPageState extends State<UploadPage> {
 
             SizedBox(height: 15),
 
-            // Description Text Box
             TextField(
               controller: _detailsController,
               decoration: InputDecoration(
@@ -222,6 +221,16 @@ class _UploadPageState extends State<UploadPage> {
               controller: _locationController,
               decoration: InputDecoration(
                 labelText: 'Location',
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            SizedBox(height: 15),
+
+            TextField(
+              controller: _gmapsLinkController,
+              decoration: InputDecoration(
+                labelText: 'Google Maps Link', // Input for Google Maps link
                 border: OutlineInputBorder(),
               ),
             ),
