@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -50,44 +51,41 @@ class _UploadPageState extends State<UploadPage> {
   Future<void> _uploadExperience() async {
     final String url = 'http://192.168.0.105:5000/upload-experience';
 
-    var request = http.MultipartRequest('POST', Uri.parse(url));
-    request.fields['email'] = _emailController.text;
-    request.fields['name'] = _nameController.text;
-    request.fields['price'] = _priceController.text;
-    request.fields['type'] = _selectedExperienceType;
-    request.fields['description'] = _detailsController.text;
-    request.fields['location'] = _locationController.text;
-    request.fields['maxPeople'] = _maxPeopleController.text;
-    request.fields['gmapsLink'] = _gmapsLinkController.text; // Google Maps link field
+    List<String> base64Images = [];
 
-    if (_isOtherSelected) {
-      request.fields['otherExperience'] = _otherExperienceController.text;
-    }
-
-    for (int i = 0; i < _selectedImages.length; i++) {
-      if (_selectedImages[i] != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'images',
-          _selectedImages[i]!.path,
-        ));
+    for (var image in _selectedImages) {
+      if (image != null) {
+        final bytes = File(image.path).readAsBytesSync();
+        base64Images.add(base64Encode(bytes));
       }
     }
 
-    try {
-      final response = await request.send();
-      if (response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Experience uploaded successfully!')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to upload experience.')),
-        );
-      }
-    } catch (e) {
-      print('Error: $e');
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'email': _emailController.text,
+        'name': _nameController.text,
+        'price': double.parse(_priceController.text),
+        'type': _selectedExperienceType,
+        'description': _detailsController.text,
+        'location': _locationController.text,
+        'maxPeople': int.parse(_maxPeopleController.text),
+        'gmapsLink': _gmapsLinkController.text, // Google Maps link field
+        'images': base64Images,
+        if (_isOtherSelected) 'otherExperience': _otherExperienceController.text,
+      }),
+    );
+
+    if (response.statusCode == 201) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $e')),
+        SnackBar(content: Text('Experience uploaded successfully!')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to upload experience.')),
       );
     }
   }
