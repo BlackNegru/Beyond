@@ -2,6 +2,7 @@ import 'package:beyond/pages/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 
 import '../misc/colors.dart';
 import '../widgets/app_largetext.dart';
@@ -25,12 +26,16 @@ class LoginPage extends StatelessWidget {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        final token = jsonResponse['token'];
+        final userId = jsonResponse['userId'];
+
+        // Save userId to SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', userId);
 
         // Navigate to MainPage on successful login
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => MainPage()),
+          MaterialPageRoute(builder: (context) => MainPage(userId: userId)),
         );
       } else {
         // Handle invalid credentials

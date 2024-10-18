@@ -8,14 +8,15 @@ import '../../widgets/app_largetext.dart';
 import '../../widgets/app_text.dart';
 
 class UploadPage extends StatefulWidget {
-  const UploadPage({super.key});
+  final String userId; // Accepting userId passed from other pages
+
+  const UploadPage({required this.userId, super.key});
 
   @override
   State<UploadPage> createState() => _UploadPageState();
 }
 
 class _UploadPageState extends State<UploadPage> {
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _detailsController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
@@ -66,7 +67,7 @@ class _UploadPageState extends State<UploadPage> {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'email': _emailController.text,
+        'userId': widget.userId, // Passing userId here
         'name': _nameController.text,
         'price': double.parse(_priceController.text),
         'type': _selectedExperienceType,
@@ -103,14 +104,6 @@ class _UploadPageState extends State<UploadPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 15),
             for (int i = 0; i < _selectedImages.length; i++) ...[
               GestureDetector(
                 onTap: () => _pickImage(i),
