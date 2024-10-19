@@ -100,6 +100,7 @@ class _UploadPageState extends State<UploadPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.mainColor,
         title: AppLargeText(text: "Upload Experience", color: Colors.white, size: 32),
         elevation: 0,

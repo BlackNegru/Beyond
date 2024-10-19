@@ -13,6 +13,7 @@ class MyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:  AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.mainColor,
         title: AppLargeText(text: "Profile", color: Colors.white, size: 32),
         elevation: 0,

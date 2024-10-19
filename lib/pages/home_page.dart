@@ -133,9 +133,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 isScrollable: true,
                 indicatorSize: TabBarIndicatorSize.label,
                 tabs: [
-                  Tab(text: "Places"),
-                  Tab(text: "Inspiration"),
-                  Tab(text: "Emotion"),
+                  Tab(text: "Hiking"),
+                  Tab(text: "Balloning"),
+                  Tab(text: "Diving"),
                 ],
               ),
             ),

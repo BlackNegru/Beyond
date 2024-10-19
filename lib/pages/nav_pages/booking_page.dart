@@ -32,6 +32,7 @@ class _BookingPageState extends State<BookingPage> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.mainColor,
         title: AppLargeText(text: "Bookings", color: Colors.white, size: 32),
         elevation: 0,

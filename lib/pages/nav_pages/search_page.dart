@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import '../../misc/colors.dart';
 import '../../widgets/app_largetext.dart';
 import '../../widgets/app_text.dart';
-
 
 class SearchPage extends StatefulWidget {
   final String userId;
@@ -21,28 +22,49 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
-    // Example search results; this should be replaced with actual search logic
-    searchResults = [
-      {"title": "Mountain Adventure", "description": "Explore the beautiful mountains."},
-      {"title": "Beach Relaxation", "description": "Relax on pristine beaches."},
-      {"title": "City Tour", "description": "Discover the city landmarks."},
-    ];
   }
 
-  void _performSearch(String query) {
-    // Add actual search logic here
-    setState(() {
-      searchResults = searchResults.where((item) {
-        return item['title']!.toLowerCase().contains(query.toLowerCase()) ||
-            item['description']!.toLowerCase().contains(query.toLowerCase());
-      }).toList();
-    });
+  Future<void> _performSearch(String query) async {
+    final String url = 'http://192.168.0.105:5000/search';
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'query': query}),
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> jsonResponse = json.decode(response.body);
+        setState(() {
+          // Map the response to the expected type
+          searchResults = jsonResponse.map((item) {
+            return {
+              "title": item['name'].toString(), // Ensure these are Strings
+              "description": item['description'].toString() // Ensure these are Strings
+            };
+          }).toList().cast<Map<String, String>>(); // Cast the entire list
+        });
+      } else {
+        print('Error: ${response.statusCode} - ${response.body}');
+      }
+    } catch (error) {
+      print('Caught error: $error');
+    }
+  }
+
+  void _onSearchButtonPressed() {
+    String query = _searchController.text;
+    if (query.isNotEmpty) {
+      _performSearch(query);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.mainColor,
         title: AppLargeText(text: "Search", color: Colors.white, size: 32),
         elevation: 0,
@@ -52,20 +74,34 @@ class _SearchPageState extends State<SearchPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(20),
-            child: TextField(
-              controller: _searchController,
-              onChanged: _performSearch,
-              decoration: InputDecoration(
-                hintText: "Search...",
-                prefixIcon: Icon(Icons.search, color: AppColors.mainColor),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: "Search...",
+                      prefixIcon: Icon(Icons.search, color: AppColors.mainColor),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColors.mainColor, width: 2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onSubmitted: (value) => _onSearchButtonPressed(),
+                  ),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.mainColor, width: 2),
-                  borderRadius: BorderRadius.circular(10),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: _onSearchButtonPressed,
+                  child: Text("Search"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.textColor2,
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
           Expanded(
