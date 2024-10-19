@@ -6,7 +6,9 @@ import '../../widgets/app_text.dart';
 
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  final String userId;
+
+  const SearchPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<SearchPage> createState() => _SearchPageState();

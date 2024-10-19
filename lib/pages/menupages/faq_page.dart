@@ -5,7 +5,9 @@ import '../../widgets/app_largetext.dart';
 import '../../widgets/app_text.dart';
 
 class FAQPage extends StatelessWidget {
-  const FAQPage({super.key});
+  final String userId;
+
+  const FAQPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

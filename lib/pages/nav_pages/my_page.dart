@@ -5,7 +5,9 @@ import '../../widgets/app_largetext.dart';
 
 
 class MyPage extends StatelessWidget {
-  const MyPage({super.key});
+  final String userId;
+
+  const MyPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

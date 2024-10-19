@@ -4,6 +4,9 @@ import '../../misc/colors.dart';
 import '../../widgets/app_largetext.dart';
 import '../../widgets/app_text.dart';
 class SettingPage extends StatelessWidget {
+  final String userId;
+
+  const SettingPage({Key? key, required this.userId}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

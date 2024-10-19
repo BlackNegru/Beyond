@@ -23,11 +23,12 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    // Pass userId to each page
     pages = [
-      HomePage(),
-      BookingPage(),
-      SearchPage(),
-      MyPage(),
+      HomePage(userId: widget.userId),  // Pass userId to HomePage
+      BookingPage(userId: widget.userId),  // Pass userId to BookingPage
+      SearchPage(userId: widget.userId),  // Pass userId to SearchPage
+      MyPage(userId: widget.userId),  // Pass userId to MyPage
       UploadPage(userId: widget.userId),  // Pass userId to UploadPage
     ];
   }
@@ -44,7 +45,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: pages[currentIndex],
+      body: pages[currentIndex],  // Display the current page
       bottomNavigationBar: BottomNavigationBar(
         unselectedFontSize: 0,
         selectedFontSize: 0,

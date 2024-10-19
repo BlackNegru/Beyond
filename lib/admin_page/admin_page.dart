@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../misc/colors.dart';
 
 class AdminPage extends StatefulWidget {
-  const AdminPage({super.key});
+  final String userId;
+
+  const AdminPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   _AdminPageState createState() => _AdminPageState();

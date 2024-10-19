@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import '../misc/colors.dart';
-import '../widgets/app_buttons.dart';
-import '../widgets/app_largetext.dart';
-import '../widgets/app_text.dart';
+import '../../misc/colors.dart';
+import '../../widgets/app_buttons.dart';
+import '../../widgets/app_largetext.dart';
+import '../../widgets/app_text.dart';
 
 class ListingsPage extends StatelessWidget {
+  final String userId;
+
+  ListingsPage({Key? key, required this.userId}) : super(key: key);
   final List<Map<String, String>> experiences = [
     {
       "title": "Skydiving",

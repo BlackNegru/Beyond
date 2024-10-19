@@ -5,7 +5,9 @@ import '../../widgets/app_largetext.dart';
 import '../../widgets/app_text.dart';
 
 class BookingPage extends StatefulWidget {
-  const BookingPage({super.key});
+  final String userId;
+
+  const BookingPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<BookingPage> createState() => _BookingPageState();

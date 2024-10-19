@@ -1,4 +1,4 @@
-import 'package:beyond/pages/Listings_page.dart';
+import 'package:beyond/pages/menupages/Listings_page.dart';
 import 'package:flutter/material.dart';
 
 import '../admin_page/admin_page.dart';
@@ -10,7 +10,9 @@ import 'menupages/setting_page.dart';
 
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String userId;
+
+  const HomePage({Key? key, required this.userId}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -36,7 +38,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           builder: (BuildContext context) => IconButton(
             icon: Icon(Icons.menu, size: 30, color: Colors.black54),
             onPressed: () {
-              Scaffold.of(context).openDrawer(); // Open the drawer
+              Scaffold.of(context).openDrawer();
             },
           ),
         ),
@@ -74,7 +76,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ListingsPage()),
+                  MaterialPageRoute(builder: (context) => ListingsPage(userId: widget.userId)),  // Pass userId to ListingsPage
                 );
               },
             ),
@@ -84,7 +86,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SettingPage()),
+                  MaterialPageRoute(builder: (context) => SettingPage(userId: widget.userId)),  // Pass userId to SettingPage
                 );
               },
             ),
@@ -94,18 +96,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => FAQPage()),
+                  MaterialPageRoute(builder: (context) => FAQPage(userId: widget.userId)),  // Pass userId to FAQPage
                 );
               },
             ),
-            // Uncomment if needed
             ListTile(
               leading: Icon(Icons.admin_panel_settings),
               title: Text('Admin Page'),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AdminPage()),
+                  MaterialPageRoute(builder: (context) => AdminPage(userId: widget.userId)),  // Pass userId to AdminPage
                 );
               },
             ),
@@ -115,18 +116,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 5,
-          ),
-          //discover text
+          SizedBox(height: 5),
           Container(
             margin: const EdgeInsets.only(left: 20),
             child: (AppLargeText(text: "Discover")),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          //tabbar
+          SizedBox(height: 10),
           Container(
             child: Align(
               alignment: Alignment.centerLeft,
@@ -170,32 +165,22 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ),
                     );
                   },
-                )
+                ),
               ],
             ),
           ),
-          SizedBox(
-            height: 25,
-          ),
+          SizedBox(height: 25),
           Container(
             margin: const EdgeInsets.only(left: 20, right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                AppLargeText(
-                  text: "Explore more",
-                  size: 22,
-                ),
-                AppText(
-                  text: "See All",
-                  color: AppColors.textColor1,
-                ),
+                AppLargeText(text: "Explore more", size: 22),
+                AppText(text: "See All", color: AppColors.textColor1),
               ],
             ),
           ),
-          SizedBox(
-            height: 10,
-          ),
+          SizedBox(height: 10),
           Container(
             height: 120,
             width: double.maxFinite,
@@ -220,14 +205,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      SizedBox(height: 10),
                       Container(
-                        child: AppText(
-                          text: images.values.elementAt(index),
-                          color: AppColors.textColor2,
-                        ),
+                        child: AppText(text: images.values.elementAt(index), color: AppColors.textColor2),
                       ),
                     ],
                   ),
@@ -240,3 +220,4 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 }
+

@@ -3,6 +3,10 @@ import '../pages/menupages/faq_page.dart';
 import '../pages/menupages/setting_page.dart';
 
 class CustomMenuBar extends StatelessWidget {
+  final String userId;  // Add userId parameter
+
+  const CustomMenuBar({Key? key, required this.userId}) : super(key: key);  // Add required constructor
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -27,7 +31,7 @@ class CustomMenuBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SettingPage()),
+                MaterialPageRoute(builder: (context) => SettingPage(userId: userId)),  // Pass userId
               );
             },
           ),
@@ -37,7 +41,7 @@ class CustomMenuBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => FAQPage()),
+                MaterialPageRoute(builder: (context) => FAQPage(userId: userId)),  // Pass userId
               );
             },
           ),
