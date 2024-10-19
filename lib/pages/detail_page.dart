@@ -1,107 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // For date formatting
-import 'package:url_launcher/url_launcher.dart'; // For launching URLs
-import '../misc/colors.dart';
-import '../widgets/app_buttons.dart';
-import '../widgets/app_largetext.dart';
-import '../widgets/app_text.dart';
-import '../widgets/responsive_button.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
+
+import '../../misc/colors.dart';
+import '../../widgets/app_largetext.dart';
+import '../../widgets/app_text.dart';
+import '../../widgets/app_buttons.dart';
+import '../../widgets/responsive_button.dart';
 
 class DetailPage extends StatefulWidget {
-  const DetailPage({super.key});
+  final String experienceId;
+
+  const DetailPage({Key? key, required this.experienceId}) : super(key: key);
 
   @override
-  State<DetailPage> createState() => _DetailPageState();
+  State<DetailPage> createState() => _DetailsPageState();
 }
 
-class _DetailPageState extends State<DetailPage> {
-  int gottenStars = 3;
-  int selectedIndex = 1;
-  String bookingStatus = "Not Booked"; // Example status, will come from the backend later
+class _DetailsPageState extends State<DetailPage> {
+  Map<String, dynamic>? experienceDetails;
+  bool isLoading = true;
   DateTime? selectedDate;
+  int selectedIndex = 0;
 
-  Color getStatusColor(String status) {
-    switch (status) {
-      case 'Not Booked':
-        return Colors.red.withOpacity(0.7);
-      case 'Pending':
-        return Colors.yellow.withOpacity(0.7);
-      case 'Booked':
-        return Colors.green.withOpacity(0.7);
-      default:
-        return Colors.grey.withOpacity(0.7);
-    }
+  @override
+  void initState() {
+    super.initState();
+    _fetchExperienceDetails();
   }
 
-  String getStatusText(String status) {
-    switch (status) {
-      case 'Not Booked':
-        return "Not Booked";
-      case 'Pending':
-        return "Pending";
-      case 'Booked':
-        return "Booked";
-      default:
-        return "Unknown";
-    }
-  }
+  Future<void> _fetchExperienceDetails() async {
+    final String url = 'http://192.168.0.105:5000/experience/${widget.experienceId}';
 
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(), // Only future dates
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate) {
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          experienceDetails = json.decode(response.body);
+          isLoading = false;
+        });
+      } else {
+        print('Error: ${response.statusCode} - ${response.body}');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (error) {
+      print('Caught error: $error');
       setState(() {
-        selectedDate = picked;
+        isLoading = false;
       });
     }
   }
 
-  void _showImageGallery() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 400,
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Image Gallery", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                  ),
-                  itemCount: 6, // Placeholder, this will be dynamic
-                  itemBuilder: (context, index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("img/mountain.jpeg"), // Change this to dynamic images later
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   Future<void> _openGoogleMaps() async {
-    const url = 'https://www.google.com/maps/place/Yosemite+National+Park'; // Static link for now
+    final String url = 'https://www.google.com/maps/place/${experienceDetails!['location']}'; // Dynamic link
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -109,26 +65,45 @@ class _DetailPageState extends State<DetailPage> {
     }
   }
 
+  void _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : experienceDetails != null
+          ? Container(
         width: double.maxFinite,
         height: double.maxFinite,
         child: Stack(
           children: [
-            // Image area, made smaller
+            // Image area
             Positioned(
               left: 0,
               right: 0,
               child: GestureDetector(
-                onTap: _showImageGallery,
+                onTap: () {
+                  // Show image gallery
+                },
                 child: Container(
                   width: double.maxFinite,
-                  height: 300, // Made smaller
+                  height: 300, // Image height
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("img/mountain.jpeg"),
+                      image: MemoryImage(base64Decode(experienceDetails!['images'][0])),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -137,11 +112,11 @@ class _DetailPageState extends State<DetailPage> {
             ),
             // Scrollable content below the image
             Positioned(
-              top: 260, // Adjusted to match the smaller image height
+              top: 260,
               child: Container(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding: const EdgeInsets.all(20),
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height - 260, // Scrollable area
+                height: MediaQuery.of(context).size.height - 260,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -157,17 +132,17 @@ class _DetailPageState extends State<DetailPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           AppLargeText(
-                            text: "Yosemite",
+                            text: experienceDetails!['name'],
                             color: Colors.black.withOpacity(0.7),
                           ),
                           AppLargeText(
-                            text: "\$ 250",
+                            text: "\$${experienceDetails!['price']}",
                             color: AppColors.mainColor,
                           ),
                         ],
                       ),
                       SizedBox(height: 10),
-                      // Floating location button
+                      // Location and Google Maps button
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -176,7 +151,7 @@ class _DetailPageState extends State<DetailPage> {
                               Icon(Icons.location_on, color: AppColors.mainColor),
                               SizedBox(width: 5),
                               AppLargeText(
-                                text: "USA California",
+                                text: experienceDetails!['location'],
                                 color: AppColors.textColor1,
                               ),
                             ],
@@ -200,12 +175,12 @@ class _DetailPageState extends State<DetailPage> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.location_on, color: AppColors.mainColor, size: 15),
+                                  Icon(Icons.map, color: AppColors.mainColor, size: 15),
                                   SizedBox(width: 5),
                                   AppText(
                                     text: "View on Maps",
                                     color: Colors.black,
-                                    size: 16, // Increased size for visibility
+                                    size: 16,
                                   ),
                                 ],
                               ),
@@ -214,45 +189,28 @@ class _DetailPageState extends State<DetailPage> {
                         ],
                       ),
                       SizedBox(height: 20),
-                      // Floating Status Widget aligned to the left and resized
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                        decoration: BoxDecoration(
-                          color: getStatusColor(bookingStatus),
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              blurRadius: 6.0,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: AppLargeText(
-                          text: getStatusText(bookingStatus),
-                          color: Colors.white,
-                          size: 14, // Reduced size of the status text
-                        ),
-                      ),
-                      SizedBox(height: 20),
+                      // Star rating
                       Row(
                         children: [
                           Wrap(
                             children: List.generate(5, (index) {
-                              return Icon(Icons.star,
-                                  color: gottenStars > index
-                                      ? AppColors.starColor
-                                      : AppColors.textColor2);
+                              return Icon(
+                                Icons.star,
+                                color: (experienceDetails!['rating'] > index)
+                                    ? AppColors.starColor
+                                    : AppColors.textColor2,
+                              );
                             }),
                           ),
                           SizedBox(width: 10),
                           AppText(
-                            text: "4.0",
+                            text: "${experienceDetails!['rating']}",
                             color: AppColors.textColor2,
                           ),
                         ],
                       ),
                       SizedBox(height: 25),
+                      // People selection
                       AppLargeText(
                         text: "People",
                         color: Colors.black.withOpacity(0.8),
@@ -276,15 +234,9 @@ class _DetailPageState extends State<DetailPage> {
                               margin: const EdgeInsets.only(right: 10),
                               child: AppButtons(
                                 size: 50,
-                                color: selectedIndex == index
-                                    ? Colors.white
-                                    : Colors.black,
-                                backgroundcolor: selectedIndex == index
-                                    ? Colors.black
-                                    : AppColors.buttonBackground,
-                                bordercolor: selectedIndex == index
-                                    ? Colors.black
-                                    : AppColors.buttonBackground,
+                                color: selectedIndex == index ? Colors.white : Colors.black,
+                                backgroundcolor: selectedIndex == index ? Colors.black : AppColors.buttonBackground,
+                                bordercolor: selectedIndex == index ? Colors.black : AppColors.buttonBackground,
                                 text: (index + 1).toString(),
                               ),
                             ),
@@ -292,6 +244,7 @@ class _DetailPageState extends State<DetailPage> {
                         }),
                       ),
                       SizedBox(height: 20),
+                      // Description
                       AppLargeText(
                         text: "Description",
                         color: Colors.black.withOpacity(0.8),
@@ -299,11 +252,11 @@ class _DetailPageState extends State<DetailPage> {
                       ),
                       SizedBox(height: 10),
                       AppText(
-                        text:
-                        "You must go for a travel fkjf fgkas fgf dfhbds fsdkbf sdbh sdfhsdf hsdjfh sdjhvsd fjhsdf sdhfb sdfjh",
+                        text: experienceDetails!['description'],
                         color: AppColors.mainTextColor,
                       ),
                       SizedBox(height: 20),
+                      // Date selection
                       AppLargeText(
                         text: "Select Date and Time",
                         color: Colors.black.withOpacity(0.8),
@@ -323,14 +276,13 @@ class _DetailPageState extends State<DetailPage> {
                               text: selectedDate == null
                                   ? "Select date"
                                   : DateFormat.yMMMMd().format(selectedDate!),
-                              color: selectedDate == null
-                                  ? AppColors.textColor2
-                                  : Colors.black,
+                              color: selectedDate == null ? AppColors.textColor2 : Colors.black,
                             ),
                           ),
                         ),
                       ),
                       SizedBox(height: 25),
+                      // Action buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -353,7 +305,8 @@ class _DetailPageState extends State<DetailPage> {
             ),
           ],
         ),
-      ),
+      )
+          : Center(child: Text("Experience not found")),
     );
   }
 }

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
 import '../../misc/colors.dart';
 import '../../widgets/app_largetext.dart';
 import '../../widgets/app_text.dart';
+import '../detail_page.dart';
 
 class SearchPage extends StatefulWidget {
   final String userId;
@@ -17,7 +19,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  List<Map<String, String>> searchResults = [];
+  List<Map<String, dynamic>> searchResults = []; // Update type to dynamic to handle full experience objects
 
   @override
   void initState() {
@@ -37,13 +39,19 @@ class _SearchPageState extends State<SearchPage> {
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = json.decode(response.body);
         setState(() {
-          // Map the response to the expected type
+          // Map the response to include full experience objects
           searchResults = jsonResponse.map((item) {
             return {
-              "title": item['name'].toString(), // Ensure these are Strings
-              "description": item['description'].toString() // Ensure these are Strings
+              "_id": item['_id'], // Include ID for fetching details later
+              "title": item['name'].toString(),
+              "description": item['description'].toString(),
+              "images": item['images'], // Store images for details page
+              "location": item['location'],
+              "maxPeople": item['maxPeople'],
+              "price": item['price'],
+              "rating": item['rating'], // Assuming you have a rating field
             };
-          }).toList().cast<Map<String, String>>(); // Cast the entire list
+          }).toList().cast<Map<String, dynamic>>();
         });
       } else {
         print('Error: ${response.statusCode} - ${response.body}');
@@ -58,6 +66,15 @@ class _SearchPageState extends State<SearchPage> {
     if (query.isNotEmpty) {
       _performSearch(query);
     }
+  }
+
+  void _navigateToDetailsPage(String experienceId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailPage(experienceId: experienceId),
+      ),
+    );
   }
 
   @override
@@ -110,9 +127,12 @@ class _SearchPageState extends State<SearchPage> {
               itemCount: searchResults.length,
               itemBuilder: (context, index) {
                 final result = searchResults[index];
-                return SearchResultCard(
-                  title: result['title']!,
-                  description: result['description']!,
+                return GestureDetector(
+                  onTap: () => _navigateToDetailsPage(result["_id"]), // Navigate on tap
+                  child: SearchResultCard(
+                    title: result['title']!,
+                    description: result['description']!,
+                  ),
                 );
               },
             ),
