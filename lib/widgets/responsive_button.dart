@@ -8,7 +8,7 @@ class ResponsiveButton extends StatelessWidget {
   final double? width;
   final VoidCallback? onPressed; // Add this line
 
-  ResponsiveButton({super.key, this.width = 120, this.isResponsive, this.onPressed});
+  ResponsiveButton({super.key, this.width = 120, this.isResponsive, this.onPressed, required String text});
 
   @override
   Widget build(BuildContext context) {

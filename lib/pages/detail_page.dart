@@ -32,7 +32,8 @@ class _DetailsPageState extends State<DetailPage> {
   }
 
   Future<void> _fetchExperienceDetails() async {
-    final String url = 'http://192.168.0.105:5000/experience/${widget.experienceId}';
+    final String url =
+        'http://192.168.0.105:5000/experience/${widget.experienceId}';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -57,11 +58,18 @@ class _DetailsPageState extends State<DetailPage> {
   }
 
   Future<void> _openGoogleMaps() async {
-    final String url = 'https://www.google.com/maps/place/${experienceDetails!['location']}'; // Dynamic link
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
+    if (experienceDetails != null && experienceDetails!['mapsLink'] != null) {
+      final String mapsLink = experienceDetails!['mapsLink'];
+      final Uri googleMapsUrl = Uri.parse(mapsLink);
+
+      try {
+        final bool launched = await launchUrl(googleMapsUrl);
+        if (!launched) {
+          print('Could not launch $mapsLink');
+        }
+      } catch (e) {
+        print('Error launching $mapsLink: $e');
+      }
     }
   }
 
@@ -103,7 +111,8 @@ class _DetailsPageState extends State<DetailPage> {
                   height: 300, // Image height
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: MemoryImage(base64Decode(experienceDetails!['images'][0])),
+                      image: MemoryImage(base64Decode(
+                          experienceDetails!['images'][0])),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -129,7 +138,8 @@ class _DetailsPageState extends State<DetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
                         children: [
                           AppLargeText(
                             text: experienceDetails!['name'],
@@ -144,11 +154,13 @@ class _DetailsPageState extends State<DetailPage> {
                       SizedBox(height: 10),
                       // Location and Google Maps button
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.location_on, color: AppColors.mainColor),
+                              Icon(Icons.location_on,
+                                  color: AppColors.mainColor),
                               SizedBox(width: 5),
                               AppLargeText(
                                 text: experienceDetails!['location'],
@@ -159,14 +171,17 @@ class _DetailsPageState extends State<DetailPage> {
                           GestureDetector(
                             onTap: _openGoogleMaps,
                             child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10),
                               margin: const EdgeInsets.only(top: 10),
                               decoration: BoxDecoration(
                                 color: AppColors.buttonBackground,
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius:
+                                BorderRadius.circular(15),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
+                                    color:
+                                    Colors.black.withOpacity(0.2),
                                     blurRadius: 8.0,
                                     offset: Offset(0, 4),
                                   ),
@@ -175,7 +190,9 @@ class _DetailsPageState extends State<DetailPage> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.map, color: AppColors.mainColor, size: 15),
+                                  Icon(Icons.map,
+                                      color: AppColors.mainColor,
+                                      size: 15),
                                   SizedBox(width: 5),
                                   AppText(
                                     text: "View on Maps",
@@ -196,7 +213,8 @@ class _DetailsPageState extends State<DetailPage> {
                             children: List.generate(5, (index) {
                               return Icon(
                                 Icons.star,
-                                color: (experienceDetails!['rating'] > index)
+                                color: (experienceDetails!['rating'] >
+                                    index)
                                     ? AppColors.starColor
                                     : AppColors.textColor2,
                               );
@@ -231,12 +249,20 @@ class _DetailsPageState extends State<DetailPage> {
                               });
                             },
                             child: Container(
-                              margin: const EdgeInsets.only(right: 10),
+                              margin:
+                              const EdgeInsets.only(right: 10),
                               child: AppButtons(
                                 size: 50,
-                                color: selectedIndex == index ? Colors.white : Colors.black,
-                                backgroundcolor: selectedIndex == index ? Colors.black : AppColors.buttonBackground,
-                                bordercolor: selectedIndex == index ? Colors.black : AppColors.buttonBackground,
+                                color: selectedIndex == index
+                                    ? Colors.white
+                                    : Colors.black,
+                                backgroundcolor:
+                                selectedIndex == index
+                                    ? Colors.black
+                                    : AppColors.buttonBackground,
+                                bordercolor: selectedIndex == index
+                                    ? Colors.black
+                                    : AppColors.buttonBackground,
                                 text: (index + 1).toString(),
                               ),
                             ),
@@ -275,28 +301,58 @@ class _DetailsPageState extends State<DetailPage> {
                             child: AppText(
                               text: selectedDate == null
                                   ? "Select date"
-                                  : DateFormat.yMMMMd().format(selectedDate!),
-                              color: selectedDate == null ? AppColors.textColor2 : Colors.black,
+                                  : DateFormat.yMMMMd()
+                                  .format(selectedDate!),
+                              color: selectedDate == null
+                                  ? AppColors.textColor2
+                                  : Colors.black,
                             ),
                           ),
                         ),
                       ),
                       SizedBox(height: 25),
-                      // Action buttons
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          AppButtons(
-                            color: AppColors.textColor1,
-                            backgroundcolor: Colors.white,
-                            bordercolor: AppColors.textColor1,
-                            size: 60,
-                            text: "Cancel",
-                          ),
-                          ResponsiveButton(
+                      // List of all images
+                      AppLargeText(
+                        text: "Images",
+                        color: Colors.black.withOpacity(0.8),
+                        size: 20,
+                      ),
+                      SizedBox(height: 10),
+                      Column(
+                        children: List.generate(
+                            experienceDetails!['images'].length,
+                                (index) {
+                              return Padding(
+                                  padding:
+                                  const EdgeInsets.only(bottom: 10),
+                                  child: Container(
+                                      width: double.maxFinite,
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: MemoryImage(base64Decode(
+                                              experienceDetails!['images']
+                                              [index])),
+                                          fit: BoxFit.cover,
+                                        ),
+                                        borderRadius:
+                                        BorderRadius.circular(15),
+                                      )));
+                            }),
+                      ),
+                      SizedBox(height: 20),
+                      // Book button
+                      GestureDetector(
+                        onTap: () {
+                          // Handle booking action
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 20),
+                          child: ResponsiveButton(
                             isResponsive: true,
+                            text: '',
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
@@ -305,8 +361,7 @@ class _DetailsPageState extends State<DetailPage> {
             ),
           ],
         ),
-      )
-          : Center(child: Text("Experience not found")),
+      ): Center(child: Text('Experience not found')),
     );
   }
 }

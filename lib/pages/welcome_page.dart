@@ -98,7 +98,7 @@ class _WelcomePageState extends State<WelcomePage> {
                               builder: (context) => LoginPage(),
                             ),
                           );
-                        },
+                        }, text: '',
                       ),
                     ],
                   ),
