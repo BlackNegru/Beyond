@@ -33,7 +33,7 @@ class _BookingPageState extends State<BookingPage> with SingleTickerProviderStat
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.mainColor,
-        title: AppLargeText(text: "Search", color: Colors.white, size: 32),
+        title: AppLargeText(text: "Bookings", color: Colors.white, size: 32),
         elevation: 0,
         bottom: TabBar(
 

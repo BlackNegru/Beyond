@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import '../../misc/colors.dart';
 import '../../widgets/app_largetext.dart';
 import '../../widgets/app_text.dart';
+import '../menupages/Listings_page.dart';
 
 class UploadPage extends StatefulWidget {
   final String userId; // Accepting userId passed from other pages
@@ -83,6 +84,10 @@ class _UploadPageState extends State<UploadPage> {
     if (response.statusCode == 201) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Experience uploaded successfully!')),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ListingsPage(userId: '',)), // Ensure to import ListingsPage
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
