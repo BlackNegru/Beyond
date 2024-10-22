@@ -9,6 +9,7 @@ import '../../widgets/app_largetext.dart';
 import '../../widgets/app_text.dart';
 import '../../widgets/app_buttons.dart';
 import '../../widgets/responsive_button.dart';
+import '../pages/booklisting_page.dart'; // Import your BookListingsPage here
 
 class DetailPage extends StatefulWidget {
   final String experienceId;
@@ -23,7 +24,7 @@ class _DetailsPageState extends State<DetailPage> {
   Map<String, dynamic>? experienceDetails;
   bool isLoading = true;
   DateTime? selectedDate;
-  int selectedIndex = 0;
+  int selectedPeople = 1; // Default number of people
 
   @override
   void initState() {
@@ -138,8 +139,7 @@ class _DetailsPageState extends State<DetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           AppLargeText(
                             text: experienceDetails!['name'],
@@ -154,13 +154,11 @@ class _DetailsPageState extends State<DetailPage> {
                       SizedBox(height: 10),
                       // Location and Google Maps button
                       Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.location_on,
-                                  color: AppColors.mainColor),
+                              Icon(Icons.location_on, color: AppColors.mainColor),
                               SizedBox(width: 5),
                               AppLargeText(
                                 text: experienceDetails!['location'],
@@ -176,12 +174,10 @@ class _DetailsPageState extends State<DetailPage> {
                               margin: const EdgeInsets.only(top: 10),
                               decoration: BoxDecoration(
                                 color: AppColors.buttonBackground,
-                                borderRadius:
-                                BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(15),
                                 boxShadow: [
                                   BoxShadow(
-                                    color:
-                                    Colors.black.withOpacity(0.2),
+                                    color: Colors.black.withOpacity(0.2),
                                     blurRadius: 8.0,
                                     offset: Offset(0, 4),
                                   ),
@@ -190,9 +186,7 @@ class _DetailsPageState extends State<DetailPage> {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.map,
-                                      color: AppColors.mainColor,
-                                      size: 15),
+                                  Icon(Icons.map, color: AppColors.mainColor, size: 15),
                                   SizedBox(width: 5),
                                   AppText(
                                     text: "View on Maps",
@@ -205,69 +199,25 @@ class _DetailsPageState extends State<DetailPage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
-                      // Star rating
-                      Row(
-                        children: [
-                          Wrap(
-                            children: List.generate(5, (index) {
-                              return Icon(
-                                Icons.star,
-                                color: (experienceDetails!['rating'] >
-                                    index)
-                                    ? AppColors.starColor
-                                    : AppColors.textColor2,
-                              );
-                            }),
-                          ),
-                          SizedBox(width: 10),
-                          AppText(
-                            text: "${experienceDetails!['rating']}",
-                            color: AppColors.textColor2,
-                          ),
-                        ],
-                      ),
                       SizedBox(height: 25),
-                      // People selection
                       AppLargeText(
-                        text: "People",
+                        text: "Number of people in your group",
                         color: Colors.black.withOpacity(0.8),
                         size: 20,
                       ),
-                      SizedBox(height: 5),
-                      AppText(
-                        text: "Number of people in your group",
-                        color: AppColors.mainTextColor,
-                      ),
                       SizedBox(height: 10),
-                      Wrap(
-                        children: List.generate(5, (index) {
-                          return InkWell(
-                            onTap: () {
-                              setState(() {
-                                selectedIndex = index;
-                              });
-                            },
-                            child: Container(
-                              margin:
-                              const EdgeInsets.only(right: 10),
-                              child: AppButtons(
-                                size: 50,
-                                color: selectedIndex == index
-                                    ? Colors.white
-                                    : Colors.black,
-                                backgroundcolor:
-                                selectedIndex == index
-                                    ? Colors.black
-                                    : AppColors.buttonBackground,
-                                bordercolor: selectedIndex == index
-                                    ? Colors.black
-                                    : AppColors.buttonBackground,
-                                text: (index + 1).toString(),
-                              ),
-                            ),
-                          );
-                        }),
+                      // Number of people input
+                      TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: 'Enter number of people',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedPeople = int.tryParse(value) ?? 1;
+                          });
+                        },
                       ),
                       SizedBox(height: 20),
                       // Description
@@ -301,8 +251,7 @@ class _DetailsPageState extends State<DetailPage> {
                             child: AppText(
                               text: selectedDate == null
                                   ? "Select date"
-                                  : DateFormat.yMMMMd()
-                                  .format(selectedDate!),
+                                  : DateFormat.yMMMMd().format(selectedDate!),
                               color: selectedDate == null
                                   ? AppColors.textColor2
                                   : Colors.black,
@@ -311,7 +260,7 @@ class _DetailsPageState extends State<DetailPage> {
                         ),
                       ),
                       SizedBox(height: 25),
-                      // List of all images
+                      // List of images (all images at the bottom)
                       AppLargeText(
                         text: "Images",
                         color: Colors.black.withOpacity(0.8),
@@ -320,37 +269,71 @@ class _DetailsPageState extends State<DetailPage> {
                       SizedBox(height: 10),
                       Column(
                         children: List.generate(
-                            experienceDetails!['images'].length,
-                                (index) {
-                              return Padding(
-                                  padding:
-                                  const EdgeInsets.only(bottom: 10),
-                                  child: Container(
-                                      width: double.maxFinite,
-                                      height: 200,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: MemoryImage(base64Decode(
-                                              experienceDetails!['images']
-                                              [index])),
-                                          fit: BoxFit.cover,
-                                        ),
-                                        borderRadius:
-                                        BorderRadius.circular(15),
-                                      )));
-                            }),
+                          experienceDetails!['images'].length,
+                              (index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Container(
+                                width: double.maxFinite,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: MemoryImage(base64Decode(
+                                        experienceDetails!['images'][index])),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                       SizedBox(height: 20),
-                      // Book button
-                      GestureDetector(
-                        onTap: () {
-                          // Handle booking action
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(top: 20),
-                          child: ResponsiveButton(
-                            isResponsive: true,
-                            text: '',
+                      // Book button styled
+// Book button styled
+                      Container(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.mainColor,
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          onPressed: () {
+                            // Check if date is selected
+                            if (selectedDate == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Please select a date')),
+                              );
+                              return;
+                            }
+
+                            // Check if number of people is valid
+                            if (selectedPeople <= 0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Number of people must be at least 1')),
+                              );
+                              return;
+                            }
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BookListingsPage(
+                                  expId: widget.experienceId,
+                                  date: DateFormat('yyyy-MM-dd').format(selectedDate!),
+                                  totalPeople: selectedPeople,
+                                ),
+                              ),
+                            );
+                          },
+                          child: AppText(
+                            text: "Book Now",
+                            color: Colors.white,
+                            size: 18,
                           ),
                         ),
                       ),
@@ -361,7 +344,8 @@ class _DetailsPageState extends State<DetailPage> {
             ),
           ],
         ),
-      ): Center(child: Text('Experience not found')),
+      )
+          : Center(child: AppText(text: "Experience not found")),
     );
   }
 }

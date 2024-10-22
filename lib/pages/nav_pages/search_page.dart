@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
 import '../../misc/colors.dart';
 import '../../widgets/app_largetext.dart';
 import '../../widgets/app_text.dart';
@@ -19,7 +18,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  List<Map<String, dynamic>> searchResults = []; // Update type to dynamic to handle full experience objects
+  List<Map<String, dynamic>> searchResults = [];
 
   @override
   void initState() {
@@ -39,17 +38,12 @@ class _SearchPageState extends State<SearchPage> {
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = json.decode(response.body);
         setState(() {
-          // Map the response to include full experience objects
+          // Map the response to include only the necessary fields
           searchResults = jsonResponse.map((item) {
             return {
-              "_id": item['_id'], // Include ID for fetching details later
+              "_id": item['_id'], // Store the ID for navigation
               "title": item['name'].toString(),
               "description": item['description'].toString(),
-              "images": item['images'], // Store images for details page
-              "location": item['location'],
-              "maxPeople": item['maxPeople'],
-              "price": item['price'],
-              "rating": item['rating'], // Assuming you have a rating field
             };
           }).toList().cast<Map<String, dynamic>>();
         });
@@ -128,7 +122,7 @@ class _SearchPageState extends State<SearchPage> {
               itemBuilder: (context, index) {
                 final result = searchResults[index];
                 return GestureDetector(
-                  onTap: () => _navigateToDetailsPage(result["_id"]), // Navigate on tap
+                  onTap: () => _navigateToDetailsPage(result["_id"]),
                   child: SearchResultCard(
                     title: result['title']!,
                     description: result['description']!,
