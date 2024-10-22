@@ -1,7 +1,8 @@
 import 'package:beyond/pages/menupages/Listings_page.dart';
 import 'package:flutter/material.dart';
 
-import '../admin_page/admin_page.dart';
+import '../admin_page/listings.dart';
+import '../admin_page/user_page.dart';
 import '../misc/colors.dart';
 import '../widgets/app_largetext.dart';
 import '../widgets/app_text.dart';
@@ -102,11 +103,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
             ListTile(
               leading: Icon(Icons.admin_panel_settings),
-              title: Text('Admin Page'),
+              title: Text('Admin Listings Page'),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AdminPage(userId: widget.userId)),  // Pass userId to AdminPage
+                  MaterialPageRoute(builder: (context) => AdminListingsPage()),  // Pass userId to AdminPage
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.admin_panel_settings),
+              title: Text('Admin Users Page'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => UserPage()),  // Pass userId to AdminPage
                 );
               },
             ),

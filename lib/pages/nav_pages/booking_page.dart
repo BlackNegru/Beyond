@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../misc/colors.dart';
 import '../../widgets/app_largetext.dart';
@@ -37,7 +40,6 @@ class _BookingPageState extends State<BookingPage> with SingleTickerProviderStat
         title: AppLargeText(text: "Bookings", color: Colors.white, size: 32),
         elevation: 0,
         bottom: TabBar(
-
           controller: _tabController,
           labelColor: AppColors.textColor2,
           unselectedLabelColor: Colors.white,
@@ -59,25 +61,61 @@ class _BookingPageState extends State<BookingPage> with SingleTickerProviderStat
   }
 }
 
-class UpcomingBookingsTab extends StatelessWidget {
+class UpcomingBookingsTab extends StatefulWidget {
+  @override
+  _UpcomingBookingsTabState createState() => _UpcomingBookingsTabState();
+}
+
+class _UpcomingBookingsTabState extends State<UpcomingBookingsTab> {
+  List<dynamic> upcomingBookings = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUpcomingBookings();
+  }
+
+  Future<void> fetchUpcomingBookings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId'); // Fetching userId from shared preferences.
+
+    if (userId != null) {
+      final response = await http.get(Uri.parse('http://192.168.0.105:5000/bookings/upcoming?userId=$userId'));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          upcomingBookings = json.decode(response.body);
+          isLoading = false;
+        });
+      } else {
+        // Handle error
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
+      // Handle case where userId is not found
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Example upcoming booking items
-    final upcomingBookings = [
-      {"title": "Yosemite Trek", "date": "2024-09-15", "status": "Confirmed", "image": "img/mountain.jpeg"},
-      {"title": "Snorkeling Adventure", "date": "2024-10-05", "status": "Pending", "image": "img/mountain.jpeg"},
-    ];
-
-    return ListView.builder(
+    return isLoading
+        ? Center(child: CircularProgressIndicator())
+        : ListView.builder(
       padding: const EdgeInsets.all(20),
       itemCount: upcomingBookings.length,
       itemBuilder: (context, index) {
         final booking = upcomingBookings[index];
         return BookingCard(
-          title: booking['title']!,
-          date: booking['date']!,
-          status: booking['status']!,
-          imagePath: booking['image']!,
+          title: booking['name']!, // Assuming your API returns experience name
+          date: booking['date']!,   // Assuming your API returns booking date
+          status: booking['status']!, // Assuming your API returns booking status
+          imagePath: booking['image']!, // Assuming your API returns image URL
         );
       },
     );
@@ -120,8 +158,8 @@ class BookingCard extends StatelessWidget {
     required this.date,
     required this.status,
     required this.imagePath,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

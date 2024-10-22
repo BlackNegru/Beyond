@@ -88,9 +88,11 @@ class _BookListingsPageState extends State<BookListingsPage> {
 
     if (response.statusCode == 201) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Booking Successful')),
+        SnackBar(content: Text('Booking Successful'),),
       );
-      Navigator.pop(context); // Navigate back to the previous page
+      Navigator.pushReplacementNamed(context, '/bookings'); // Change to your bookings page route
+
+
     } else {
       print('Error: ${response.statusCode} - ${response.body}'); // Log the error response
       ScaffoldMessenger.of(context).showSnackBar(

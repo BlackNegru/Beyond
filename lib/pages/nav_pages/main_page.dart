@@ -29,7 +29,7 @@ class _MainPageState extends State<MainPage> {
       BookingPage(userId: widget.userId),  // Pass userId to BookingPage
       SearchPage(userId: widget.userId),  // Pass userId to SearchPage
       MyPage(userId: widget.userId),  // Pass userId to MyPage
-      UploadPage(userId: widget.userId),  // Pass userId to UploadPage
+      UploadPage(userId: widget.userId), // Pass userId to UploadPage
     ];
   }
 
