@@ -44,7 +44,7 @@ class _BookListingsPageState extends State<BookListingsPage> {
   // Fetch experience details from the API using expId
   Future<void> _fetchExperienceDetails() async {
     final response = await http.get(
-      Uri.parse('http://192.168.0.105:5000/experience/${widget.expId}'),
+      Uri.parse('https://beyondserver.onrender.com/experience/${widget.expId}'),
     );
 
     if (response.statusCode == 200) {
@@ -75,7 +75,7 @@ class _BookListingsPageState extends State<BookListingsPage> {
     print('Date: ${widget.date}');
 
     final response = await http.post(
-      Uri.parse('http://192.168.0.105:5000/book-experience'),
+      Uri.parse('https://beyondserver.onrender.com/book-experience'),
       headers: {"Content-Type": "application/json"},
       body: json.encode({
         'userId': userId,
@@ -130,7 +130,7 @@ class _BookListingsPageState extends State<BookListingsPage> {
               onPressed: _bookExperience,
               child: Text('Confirm Booking'),
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 15),
+                padding: EdgeInsets.symmetric(vertical: 20,horizontal: 20),
                 textStyle: TextStyle(fontSize: 18),
               ),
             ),

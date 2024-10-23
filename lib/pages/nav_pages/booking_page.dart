@@ -81,7 +81,7 @@ class _UpcomingBookingsTabState extends State<UpcomingBookingsTab> {
     String? userId = prefs.getString('userId'); // Fetching userId from shared preferences.
 
     if (userId != null) {
-      final response = await http.get(Uri.parse('http://192.168.0.105:5000/bookings/upcoming?userId=$userId'));
+      final response = await http.get(Uri.parse('https://beyondserver.onrender.com/bookings/upcoming?userId=$userId'));
 
       if (response.statusCode == 200) {
         setState(() {
@@ -175,13 +175,13 @@ class BookingCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           child: Image.asset(
             imagePath,
-            width: 80,
-            height: 80,
+            width: 60,
+            height: 60,
             fit: BoxFit.cover,
           ),
         ),
-        title: AppLargeText(text: title, color: Colors.black),
-        subtitle: AppText(text: "Date: $date", color: AppColors.textColor2),
+        title: AppLargeText(text: title, color: Colors.black,size: 15,),
+        subtitle: AppText(text: "Date: $date", color: AppColors.textColor2,size: 10,),
         trailing: AppText(
           text: status,
           color: status == "Completed" ? Colors.green : (status == "Confirmed" ? Colors.blue : Colors.orange),

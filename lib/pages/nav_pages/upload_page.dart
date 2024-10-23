@@ -51,7 +51,7 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   Future<void> _uploadExperience() async {
-    final String url = 'http://192.168.0.105:5000/upload-experience';
+    final String url = 'https://beyondserver.onrender.com/upload-experience';
 
     List<String> base64Images = [];
 
@@ -102,7 +102,7 @@ class _UploadPageState extends State<UploadPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.mainColor,
-        title: AppLargeText(text: "Upload Experience", color: Colors.white, size: 32),
+        title: AppLargeText(text: "Upload Experience", color: Colors.white, size: 20),
         elevation: 0,
       ),
       body: SingleChildScrollView(

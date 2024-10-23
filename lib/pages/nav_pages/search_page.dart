@@ -26,7 +26,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<void> _performSearch(String query) async {
-    final String url = 'http://192.168.0.105:5000/search';
+    final String url = 'https://beyondserver.onrender.com/search';
 
     try {
       final response = await http.post(
@@ -77,7 +77,7 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.mainColor,
-        title: AppLargeText(text: "Search", color: Colors.white, size: 32),
+        title: AppLargeText(text: "Search", color: Colors.white, size: 25),
         elevation: 0,
       ),
       body: Column(
@@ -109,7 +109,7 @@ class _SearchPageState extends State<SearchPage> {
                   onPressed: _onSearchButtonPressed,
                   child: Text("Search"),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.textColor2,
+                    backgroundColor: AppColors.textColor2.withOpacity(0.2),
                   ),
                 ),
               ],

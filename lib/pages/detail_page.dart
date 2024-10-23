@@ -34,7 +34,7 @@ class _DetailsPageState extends State<DetailPage> {
 
   Future<void> _fetchExperienceDetails() async {
     final String url =
-        'http://192.168.0.105:5000/experience/${widget.experienceId}';
+        'https://beyondserver.onrender.com/experience/${widget.experienceId}';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -143,10 +143,12 @@ class _DetailsPageState extends State<DetailPage> {
                         children: [
                           AppLargeText(
                             text: experienceDetails!['name'],
+                            size: 25,
                             color: Colors.black.withOpacity(0.7),
                           ),
                           AppLargeText(
                             text: "\$${experienceDetails!['price']}",
+                            size: 25,
                             color: AppColors.mainColor,
                           ),
                         ],
@@ -162,6 +164,7 @@ class _DetailsPageState extends State<DetailPage> {
                               SizedBox(width: 5),
                               AppLargeText(
                                 text: experienceDetails!['location'],
+                                size: 20,
                                 color: AppColors.textColor1,
                               ),
                             ],
@@ -191,7 +194,7 @@ class _DetailsPageState extends State<DetailPage> {
                                   AppText(
                                     text: "View on Maps",
                                     color: Colors.black,
-                                    size: 16,
+                                    size: 10,
                                   ),
                                 ],
                               ),
@@ -203,7 +206,7 @@ class _DetailsPageState extends State<DetailPage> {
                       AppLargeText(
                         text: "Number of people in your group",
                         color: Colors.black.withOpacity(0.8),
-                        size: 20,
+                        size: 15,
                       ),
                       SizedBox(height: 10),
                       // Number of people input
@@ -224,7 +227,7 @@ class _DetailsPageState extends State<DetailPage> {
                       AppLargeText(
                         text: "Description",
                         color: Colors.black.withOpacity(0.8),
-                        size: 20,
+                        size: 15,
                       ),
                       SizedBox(height: 10),
                       AppText(
@@ -236,7 +239,7 @@ class _DetailsPageState extends State<DetailPage> {
                       AppLargeText(
                         text: "Select Date and Time",
                         color: Colors.black.withOpacity(0.8),
-                        size: 20,
+                        size: 15,
                       ),
                       SizedBox(height: 5),
                       GestureDetector(

@@ -10,7 +10,7 @@ class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
 
   Future<void> registerUser(BuildContext context, String name, String email, String password) async {
-    final url = 'http://192.168.0.105:5000/register'; // Replace with your backend server URL
+    final url = 'https://beyondserver.onrender.com/register'; // Replace with your backend server URL
 
     // Check if the email is valid using regex
     if (!validateEmail(email)) {

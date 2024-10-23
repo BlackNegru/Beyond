@@ -17,7 +17,7 @@ class _ListingsPageState extends State<AdminListingsPage> {
   }
 
   Future<void> fetchExperiences() async {
-    final response = await http.get(Uri.parse('http://192.168.0.105:5000/experiences'));
+    final response = await http.get(Uri.parse('https://beyondserver.onrender.com/experiences'));
 
     if (response.statusCode == 200) {
       setState(() {
@@ -29,7 +29,7 @@ class _ListingsPageState extends State<AdminListingsPage> {
   }
 
   Future<void> deleteExperience(String expId) async {
-    final response = await http.delete(Uri.parse('http://<your-server-url>/delete-experience/$expId'));
+    final response = await http.delete(Uri.parse('https://beyondserver.onrender.com/delete-experience/$expId'));
 
     if (response.statusCode == 200) {
       setState(() {

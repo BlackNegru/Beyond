@@ -21,18 +21,19 @@ class FAQPage extends StatelessWidget {
       body: Container(
         width: double.maxFinite,
         height: double.maxFinite,
-        padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
             FaqItem(
               question: "What types of experiences can I book through Beyond?",
               answer:
-              "Beyond offers a wide range of experiences including trekking, hiking, underwater diving, snorkeling, ballooning, and kayaking. Each experience is carefully curated to ensure the best adventure possible.",
+              "Beyond offers a wide range of experiences including trekking, hiking,"
+                  " underwater diving, snorkeling, ballooning, and kayaking. Each experience is carefully curated to ensure the best adventure possible.",
             ),
             FaqItem(
               question: "How do I book an experience?",
               answer:
-              "Booking an experience is easy. Simply browse our list of experiences, select the one you're interested in, and follow the prompts to book. You'll need to provide some details and payment information to complete your booking.",
+              "Booking an experience is easy. Simply browse our list of experiences,"
+                  " select the one you're interested in, and follow the prompts to book. You'll need to provide some details and payment information to complete your booking.",
             ),
             FaqItem(
               question: "What should I bring for my experience?",
@@ -57,16 +58,17 @@ class FAQPage extends StatelessWidget {
             FaqItem(
               question: "What safety measures are in place for the experiences?",
               answer:
-              "We prioritize safety in all our experiences. Each provider follows strict safety protocols and guidelines. You will receive specific safety instructions before the start of your experience.",
+              "We prioritize safety in all our experiences. Each provider"
+                  " follows strict safety protocols and guidelines. You will receive specific safety instructions before the start of your experience.",
             ),
             FaqItem(
               question: "How do I contact support if I have more questions?",
               answer:
               "If you have more questions or need further assistance, you can contact our support team via the following methods:",
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             // Contact Information
-            AppLargeText(text: "Contact Information", color: Colors.black.withOpacity(0.7), size: 18),
+            AppLargeText(text: "Contact Information", color: Colors.black.withOpacity(0.7), size: 15),
             SizedBox(height: 10),
             AppText(text: "Phone: +1-800-123-4567", color: AppColors.textColor1),
             AppText(text: "Phone: +1-800-234-5678", color: AppColors.textColor1),
@@ -115,7 +117,7 @@ class _FaqItemState extends State<FaqItem> {
               AppLargeText(
                 text: widget.question,
                 color: Colors.black.withOpacity(0.7),
-                size: 12,
+                size: 9,
               ),
               Icon(
                 _isExpanded ? Icons.expand_less : Icons.expand_more,
@@ -126,7 +128,7 @@ class _FaqItemState extends State<FaqItem> {
         ),
         if (_isExpanded)
           Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 5),
             child: AppText(
               text: widget.answer,
               color: AppColors.textColor1,

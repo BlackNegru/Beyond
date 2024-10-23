@@ -35,7 +35,7 @@ class _MyPageState extends State<MyPage> {
   }
 
   Future<void> _fetchUserDetails(String userId) async {
-    final response = await http.get(Uri.parse('http://192.168.0.105:5000/user/$userId')); // Replace with your actual API URL
+    final response = await http.get(Uri.parse('https://beyondserver.onrender.com/user/$userId')); // Replace with your actual API URL
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -107,7 +107,8 @@ class _MyPageState extends State<MyPage> {
                   },
                   icon: Icon(Icons.edit),
                   label: Text('Edit Profile'),
-                  style: ElevatedButton.styleFrom(),
+                  style: ElevatedButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 5,horizontal: 5),),
+
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
@@ -115,11 +116,11 @@ class _MyPageState extends State<MyPage> {
                   },
                   icon: Icon(Icons.bookmark),
                   label: Text('My Bookings'),
-                  style: ElevatedButton.styleFrom(),
+                  style: ElevatedButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 5,horizontal: 5),),
                 ),
               ],
             ),
-            SizedBox(height: 32),
+            SizedBox(height: 20),
             // Additional Information
             Expanded(
               child: ListView(

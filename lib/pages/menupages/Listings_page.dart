@@ -11,7 +11,7 @@ class ListingsPage extends StatelessWidget {
   ListingsPage({Key? key, required this.userId}) : super(key: key);
 
   Future<List<Map<String, dynamic>>> _fetchExperiences() async {
-    final String url = 'http://192.168.0.105:5000/get-experiences/$userId'; // Your API endpoint
+    final String url = 'https://beyondserver.onrender.com/get-experiences/$userId'; // Your API endpoint
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -52,7 +52,7 @@ class ListingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.mainColor,
-        title: AppLargeText(text: "Manage Experiences", color: Colors.white, size: 28),
+        title: AppLargeText(text: "Manage Listings", color: Colors.white, size: 20),
         elevation: 0,
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(

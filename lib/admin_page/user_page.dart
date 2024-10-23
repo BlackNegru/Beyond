@@ -17,7 +17,7 @@ class _UserPageState extends State<UserPage> {
   }
 
   Future<void> fetchUsers() async {
-    final response = await http.get(Uri.parse('http://192.168.0.105:5000/users'));
+    final response = await http.get(Uri.parse('https://beyondserver.onrender.com/users'));
 
     if (response.statusCode == 200) {
       setState(() {
@@ -29,7 +29,7 @@ class _UserPageState extends State<UserPage> {
   }
 
   Future<void> deleteUser(String userId) async {
-    final response = await http.delete(Uri.parse('http://192.168.0.105:5000/delete-user/$userId'));
+    final response = await http.delete(Uri.parse('https://beyondserver.onrender.com/delete-user/$userId'));
 
     if (response.statusCode == 200) {
       setState(() {
